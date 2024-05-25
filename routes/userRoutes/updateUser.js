@@ -1,4 +1,4 @@
-const data = require('../../data');
+const data = require('../../sql3-data');
 
 module.exports = (req, res) => {
   const id = parseInt(req.url.split('/')[2]);
@@ -8,7 +8,7 @@ module.exports = (req, res) => {
     body += chunk;
   });
 
-  req.on('end', () => {
+  req.on('end', async () => {
     const parsedBody = new URLSearchParams(body);
     const updatedData = {};
 
@@ -16,7 +16,7 @@ module.exports = (req, res) => {
       updatedData[key] = key === 'age' ? parseInt(value) : value;
     });
 
-    const updatedUser = data.updateUser(id, updatedData);
+    const updatedUser = await data.updateUser(id, updatedData);
 
     if (updatedUser) {
       res.writeHead(200);
